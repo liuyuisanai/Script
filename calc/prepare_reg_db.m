@@ -6,7 +6,7 @@ function reg_db = prepare_reg_db( bodydb, facerect )
     if ~isempty(bodydb)
 %         reg_db.bodyloc = bodydb.bbox;
         reg_db.dir = cellfun(@(x)x.dir, bodydb, 'UniformOutput', false);
-        for i = 1 : size(facerect, 1)
+        parfor i = 1 : size(facerect, 1)
             fullp = bodydb{i}.dir;
             try
                 img = imread(fullp);
@@ -36,14 +36,15 @@ function reg_db = prepare_reg_db( bodydb, facerect )
                     headbbox(3)-l,headbbox(4)-u].*[re_ratio re_ratio];
                 lurd = [l u r d];
             end
-            reg_db.largebox = lurd;
+            largebox{i} = lurd;
         end
         errorid = find(errorid==1);
         if numel(errorid) > 0
             fprintf('Reading %d images error\n', numel(errorid));
             label(errorid,:)=[];
-            reg_db.largebox(errorid,:) = [];
+            largebox(errorid,:) = [];
         end
+        reg_db.largebox = largebox;
         reg_db.targetbox = label;
         reg_db.order_bbox = 'lurd';
     end
