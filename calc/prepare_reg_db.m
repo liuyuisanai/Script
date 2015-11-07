@@ -5,9 +5,9 @@ function reg_db = prepare_reg_db( bodydb, facerect )
     label = zeros(numel(bodydb),4);
     if ~isempty(bodydb)
 %         reg_db.bodyloc = bodydb.bbox;
-        reg_db.dir = bodydb.dir;
+        reg_db.dir = cellfun(@(x)x.dir, bodydb, 'UniformOutput', false);
         for i = 1 : size(facerect, 1)
-            fullp = bodydb.dir{i};
+            fullp = bodydb{i}.dir;
             try
                 img = imread(fullp);
             catch

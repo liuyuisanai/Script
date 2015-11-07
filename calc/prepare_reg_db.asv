@@ -5,7 +5,7 @@ function reg_db = prepare_reg_db( bodydb, facerect )
     label = zeros(numel(bodydb),4);
     if ~isempty(bodydb)
 %         reg_db.bodyloc = bodydb.bbox;
-        reg_db.dir = bodydb.dir;
+        reg_db.dir = cellfun(@(x)x.dir, bodydb, 'UniformOutput' to false);
         for i = 1 : size(facerect, 1)
             fullp = bodydb.dir{i};
             try
@@ -39,9 +39,11 @@ function reg_db = prepare_reg_db( bodydb, facerect )
             reg_db.largebox = lurd;
         end
         errorid = find(errorid==1);
-        fprintf(')
-        label(errorid,:)=[];
-        reg_db.largebox(errorid,:) = [];
+        if numel(errorid) > 0
+            fprintf('Reading %d images error\n', numel(errorid));
+            label(errorid,:)=[];
+            reg_db.largebox(errorid,:) = [];
+        end
         reg_db.targetbox = label;
         reg_db.order_bbox = 'lurd';
     end
