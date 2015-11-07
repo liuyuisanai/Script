@@ -3,6 +3,7 @@ function reg_db = prepare_reg_db( bodydb, facerect )
 %facerect:      [l u w h];
     errorid = zeros(numel(bodydb),1);
     label = zeros(numel(bodydb),4);
+    largebox = zeros(numel(bodydb),4);
     if ~isempty(bodydb)
 %         reg_db.bodyloc = bodydb.bbox;
         reg_db.dir = cellfun(@(x)x.dir, bodydb, 'UniformOutput', false);
@@ -36,7 +37,7 @@ function reg_db = prepare_reg_db( bodydb, facerect )
                     headbbox(3)-l,headbbox(4)-u].*[re_ratio re_ratio];
                 lurd = [l u r d];
             end
-            largebox{i} = lurd;
+            largebox(i,:) = lurd;
         end
         errorid = find(errorid==1);
         if numel(errorid) > 0
