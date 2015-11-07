@@ -5,4 +5,4 @@
     1-class[n*1 double]:    Class of each instance.
     1-nchannel[n*1 double]: 1 for gray imgs and 3 for RGB imgs
     1-Order[string]:        'rgb_nchw' or 'bgr_whcn'
-    1-bboxOrder[string]:    'ltwh' or 'ltrb'
+    1-bboxOrder[string]:    'ltwh' or 'ltrb' or 'lrtb'
