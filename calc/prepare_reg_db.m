@@ -2,6 +2,7 @@ function reg_db = prepare_reg_db( bodydb, facerect )
 %bodydb.bbox:   [l u r b];
 %facerect:      [l u w h];
     errorid = zeros(numel(bodydb),1);
+    label = zeros(numel(bodydb),4);
     if ~isempty(bodydb)
 %         reg_db.bodyloc = bodydb.bbox;
         reg_db.dir = bodydb.dir;
@@ -37,7 +38,14 @@ function reg_db = prepare_reg_db( bodydb, facerect )
             end
             reg_db.largebox = lurd;
         end
+        errorid = find(errorid==1);
+        if numel(errorid) > 0
+            fprintf('Reading %d images error\n', numel(errorid));
+            label(errorid,:)=[];
+            reg_db.largebox(errorid,:) = [];
+        end
         reg_db.targetbox = label;
+        reg_db.order_bbox = 'lurd';
     end
 end
 
