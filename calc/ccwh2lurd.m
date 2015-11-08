@@ -1,0 +1,9 @@
+function lurd = ccwh2lurd( ccwh )
+    cvtmat = [  1, 0, -0.50, 0;...
+                0, 1, 0, -0.50;...
+                1, 0, 0.50, 0;...
+                0, 1, 0, 0.50];
+    cvtmat = cvtmat';
+    lurd = ccwh*cvtmat;
+end
+
