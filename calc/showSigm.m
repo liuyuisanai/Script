@@ -5,6 +5,7 @@ function showSigm( theta, x, y, showpts )
         figure;
     else
         figure;
+        if showpts
             plot(x, y, 'rx','MarkerSize',10);
             hold on;
         end

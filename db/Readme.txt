@@ -1,3 +1,12 @@
+0-DatabaseInfo[struct]
+    1-root[string]
+    1-listf[string]
+    1-rectf[string]
+    1-bboxOrder[string]:    'ltwh' or 'ltrb' or 'lrtb'
+    1-labelf[string]
+    *1-fliped[n*1 double]
+    *1-needflip[double]
+
 0-Classdb[struct]
     1-root[string]:         Root dir shared by all dir
     1-dir[n*1 cell]:        Dir of each instance
