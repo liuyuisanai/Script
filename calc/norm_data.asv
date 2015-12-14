@@ -1,0 +1,16 @@
+function normed = norm_data( mat, mode )
+%mode: 1=max1norm, 2=L2normAll, 3=L2normRow, 4=L2normCol
+    if nargin < 2
+        mode = 2;
+    end
+    if mode == 1
+        normed = bsxfun(@rdevide, mat, max(mat(:)));
+    elseif mode == 2
+        normed = bsxfun(@rdevide, mat, norm(mat));
+    elseif mode == 3
+        normed = bsxfun(@rdevide, mat, norm(mat));
+    elseif mode == 4
+        
+    end
+end
+
