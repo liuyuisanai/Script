@@ -49,22 +49,25 @@ void mexFunction(MEX_ARGS) {
 		cell_ele_ptr = mxGetCell(prhs[ 0 ], icell);
 		char* path = mxArrayToString(cell_ele_ptr);
 		try{
-			img = imread(path, IMREAD_COLOR);	
+			img = imread(path, IMREAD_COLOR);
+            if (img.data == nullptr)
+                throw "Image not exist!";
+            l = max(rect[ icell * 4 ] - 1, 0.0);
+            u = max(rect[ icell * 4 + 1 ] - 1, 0.0);
+            r = min(l + rect[ icell * 4 + 2 ], img.cols - 1.0);
+            d = min(u + rect[ icell * 4 + 3 ], img.rows - 1.0);
+            Mat roi_img = img(Range(u, d), Range(l, r));
+            resize(roi_img, roi_img, Size(dsize, dsize));
+            unsigned char* imgdata = (unsigned char*)( roi_img.data );
+            memcpy(blob + icell*dsize*dsize * 3, imgdata, sizeof(char)*dsize*dsize * 3);
 		}
-		catch ( std::runtime_error err ){
+		catch ( string err ){
 			char warnmsg[ 255 ];
 			sprintf_s(warnmsg, "Cannot read %s", path);
 			mexWarnMsgTxt(warnmsg);
+            
 		}
-		int l, r, u, d;
-		l = max(rect[ icell * 4 ] - 1, 0.0);
-		u = max(rect[ icell * 4 + 1 ] - 1, 0.0);
-		r = min(l + rect[ icell * 4 + 2 ], img.cols - 1.0);
-		d = min(u + rect[ icell * 4 + 3 ], img.rows - 1.0);
-		Mat roi_img = img(Range(u, d), Range(l, r));
-		resize(roi_img, roi_img, Size(dsize, dsize));
-		unsigned char* imgdata = (unsigned char*)( roi_img.data );
-		memcpy(blob + icell*dsize*dsize * 3, imgdata, sizeof(char)*dsize*dsize * 3);
+        p_img = img;
 		mxFree(path);
 	}
 	memcpy(ptr, blob, num*dsize*dsize * 3 * mxGetElementSize(plhs[ 0 ]));
