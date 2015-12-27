@@ -1,5 +1,0 @@
-function data = readbin(filename, size, precision)
-    fid = fopen(filename, 'rb');
-    data = fread(fid, [, precision);
-    fclose(fid);
-end
