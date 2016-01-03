@@ -30,6 +30,7 @@ void mexFunction(MEX_ARGS) {
 		return;
 	}
 	mwSize buflen;
+	mwIndex icell;
 	//rect
 	double* rect = mxGetPr(prhs[ 1 ]);
 	int num = dims[ 0 ];
@@ -41,37 +42,34 @@ void mexFunction(MEX_ARGS) {
 	mwSize blobsize[ 4 ] = { 3, dsize, dsize, num };
 	plhs[ 0 ] = mxCreateNumericArray(4, blobsize, mxUINT8_CLASS, mxREAL);
 	unsigned char* ptr = (unsigned char*)mxGetData(plhs[ 0 ]);
-//     mexPrintf("Max thread: %d\n", omp_get_max_threads());
 #pragma omp parallel for
-	for ( mwIndex icell = 0; icell < num; icell++ )
+	Mat img, p_img;
+	for ( icell = 0; icell < num; icell++ )
 	{
-        mexPrintf("Thread: %d for img %d\n", omp_get_num_threads(), icell);
-		Mat img, roi_img;
-		int l, r, u, d;
-		unsigned char* imgdata = nullptr;
 		cell_ele_ptr = mxGetCell(prhs[ 0 ], icell);
 		char* path = mxArrayToString(cell_ele_ptr);
 		try{
 			img = imread(path, IMREAD_COLOR);
-			if ( img.data == nullptr )
-				throw "Image not exist!";
-			l = max(rect[ icell * 4 ] - 1, 0.0);
-			u = max(rect[ icell * 4 + 1 ] - 1, 0.0);
-			r = min(l + rect[ icell * 4 + 2 ], img.cols - 1.0);
-			d = min(u + rect[ icell * 4 + 3 ], img.rows - 1.0);
-			roi_img = img(Range(u, d), Range(l, r));
-			resize(roi_img, roi_img, Size(dsize, dsize));
-			imgdata = (unsigned char*)( roi_img.data );
-			memcpy(blob + icell*dsize*dsize * 3, imgdata, sizeof(char)*dsize*dsize * 3);
+            if (img.data == nullptr)
+                throw "Image not exist!";
+            l = max(rect[ icell * 4 ] - 1, 0.0);
+            u = max(rect[ icell * 4 + 1 ] - 1, 0.0);
+            r = min(l + rect[ icell * 4 + 2 ], img.cols - 1.0);
+            d = min(u + rect[ icell * 4 + 3 ], img.rows - 1.0);
+            Mat roi_img = img(Range(u, d), Range(l, r));
+            resize(roi_img, roi_img, Size(dsize, dsize));
+            unsigned char* imgdata = (unsigned char*)( roi_img.data );
+            memcpy(blob + icell*dsize*dsize * 3, imgdata, sizeof(char)*dsize*dsize * 3);
 		}
-		catch ( ... ){
+		catch ( string err ){
 			char warnmsg[ 255 ];
 			sprintf_s(warnmsg, "Cannot read %s", path);
 			mexWarnMsgTxt(warnmsg);
-			memcpy(blob + icell*dsize*dsize * 3, imgdata, sizeof(char)*dsize*dsize * 3);
+            
 		}
+        p_img = img;
 		mxFree(path);
 	}
 	memcpy(ptr, blob, num*dsize*dsize * 3 * mxGetElementSize(plhs[ 0 ]));
 }
-//>> mex  prepare_data_from_annotation_omp.cpp -I'C:\opencv\build\include' -L'C:\opencv\build\x64\vc12\lib' -lopencv_core2411.lib -lopencv_highgui2411.lib -lopencv_imgproc2411.lib COMPFLAGS="/openmp $COMPFLAGS" CFLAGS="\$CFLAGS -fopenmp" LDFLAGS="\$LDFLAGS -fopenmp"
+//>> mex -g imread_mex.cpp -I'C:\opencv\build\include' -L'C:\opencv\build\x64\vc12\lib' -lopencv_core2411.lib -lopencv_highgui2411.lib -lopencv_imgproc2411.lib
