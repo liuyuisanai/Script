@@ -1,4 +1,4 @@
-mex  imread_mex.cpp -I'C:\opencv\build\include' -L'C:\opencv\build\x64\vc12\lib' -lopencv_core2411.lib -lopencv_highgui2411.lib -lopencv_imgproc2411.lib
+mex  prepare_data_from_annotation_omp.cpp -I'C:\opencv\build\include' -L'C:\opencv\build\x64\vc12\lib' -lopencv_core2411.lib -lopencv_highgui2411.lib -lopencv_imgproc2411.lib
 % list = {'C:\Users\scien\Pictures\showPhoto.jpg'; 'C:\Users\scien\Pictures\test.jpg'};
 % img = imread_mex(list, [1,1,200,200;1,1,150,150]', 100);
 tic;
