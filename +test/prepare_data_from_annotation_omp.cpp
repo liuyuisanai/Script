@@ -45,7 +45,7 @@ void mexFunction(MEX_ARGS) {
 #pragma omp parallel for
 	for ( mwIndex icell = 0; icell < num; icell++ )
 	{
-//         mexPrintf("Thread: %d for img %d\n", omp_get_num_threads(), icell);
+        mexPrintf("Thread: %d for img %d\n", omp_get_num_threads(), icell);
 		Mat img, roi_img;
 		int l, r, u, d;
 		unsigned char* imgdata = nullptr;
@@ -74,4 +74,4 @@ void mexFunction(MEX_ARGS) {
 	}
 	memcpy(ptr, blob, num*dsize*dsize * 3 * mxGetElementSize(plhs[ 0 ]));
 }
-//>> mex -g imread_mex.cpp -I'C:\opencv\build\include' -L'C:\opencv\build\x64\vc12\lib' -lopencv_core2411.lib -lopencv_highgui2411.lib -lopencv_imgproc2411.lib
+//>> mex  prepare_data_from_annotation_omp.cpp -I'C:\opencv\build\include' -L'C:\opencv\build\x64\vc12\lib' -lopencv_core2411.lib -lopencv_highgui2411.lib -lopencv_imgproc2411.lib CFLAGS="\$CFLAGS -fopenmp" LDFLAGS="\$LDFLAGS -fopenmp"
