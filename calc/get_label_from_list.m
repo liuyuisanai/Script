@@ -10,6 +10,7 @@ label = zeros(size(list, 1), 1);
         smb = '\';
     end
     for i = 1 : numel(list)
+        list{i} = [smb list{i}];
         rid = strfind(list{i}, smb);
         rid = rid(end)-1;
         lid = strfind(list{i}(1:rid), smb);
