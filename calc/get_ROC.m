@@ -1,6 +1,14 @@
 function [tpr, fpr, thresh, AOC] = get_ROC(dist, label)
-    if size(dist,1)==size(dist,2)&&sum(diag(dist))<size(dist,1)*0.9
-        dist = max(dist,2*eye(size(dist,1))-1);
+    label = single(label);
+    if size(label, 1) ~= size(label, 2)
+        label = reshape(label, [numel(label) 1]);
+        label = repmat(label, [1 length(label)])==repmat(label',[length(label) 1]);
+    end
+    if size(dist,1)==size(dist,2)
+        dist = dist-100*eye(length(dist));
+        t = find(dist < -1);
+        dist(t)=[];
+        label(t)=[];
     end
     assert(numel(dist)==numel(label), 'Score size should equal to label.');
     dist = reshape(dist, [numel(dist) 1]);
@@ -8,6 +16,10 @@ function [tpr, fpr, thresh, AOC] = get_ROC(dist, label)
 %     dist = abs(dist);
     tl = dist(find(label==1));
     fl = dist(find(label==0));
+    if true
+        tl = tl(randperm(numel(tl), min(2000, numel(tl))));
+        fl = fl(randperm(numel(fl), min(20000, numel(fl))));
+    end
     minl = min(dist);
     maxl = max(dist);
     step = 1000;
