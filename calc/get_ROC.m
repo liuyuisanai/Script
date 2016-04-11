@@ -1,4 +1,4 @@
-function [tpr, fpr, thresh, AOC] = get_ROC(dist, label)
+function [tpr, fpr, thresh, AUC] = get_ROC(dist, label)
     label = single(label);
     if size(label, 1) ~= size(label, 2)
         label = reshape(label, [numel(label) 1]);
