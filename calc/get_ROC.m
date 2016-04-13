@@ -28,5 +28,5 @@ function [tpr, fpr, thresh, AUC] = get_ROC(dist, label)
         tpr(i) = sum(tl>=thresh(i))/numel(tl);
         fpr(i) = sum(fl>=thresh(i))/numel(fl);
     end
-    AOC = -trapz(fpr, tpr);
+    AUC = -trapz(fpr, tpr);
 end
